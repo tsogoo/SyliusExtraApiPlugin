@@ -22,12 +22,6 @@
             <tag name="kernel.event_listener" event="lexik_jwt_authentication.on_jwt_created" method="onJWTCreated"/>
         </service>
 
-        <service id="david_roberto.serializer.product_variant_serializer" class="DavidRoberto\SyliusExtraApiPlugin\Serializer\ProductVariantSerializer">
-            <argument type="service" id="api_platform.serializer.normalizer.item" />
-            <argument type="service" id="sylius.calculator.product_variant_price" />
-            <argument type="service" id="sylius.context.channel" />
-            <tag name="serializer.normalizer" priority="100"/>
-        </service>
 
         <service id="Sylius\Component\User\Security\Generator\GeneratorInterface" alias="sylius.shop_user.token_generator.password_reset" />
 
@@ -45,6 +39,9 @@
         <service id="DavidRoberto\SyliusExtraApiPlugin\Controller\Api\SearchProductsController" public="true" autowire="true"/>
         <service id="DavidRoberto\SyliusExtraApiPlugin\Controller\Api\StripeCheckoutController" public="true" autowire="true"/>
         <service id="DavidRoberto\SyliusExtraApiPlugin\Controller\Api\StripeNotifySuccessController" public="true" autowire="true"/>
-
+        <service id="DavidRoberto\SyliusExtraApiPlugin\Controller\Api\DeleteOrderItemAction" public="true">
+            <argument type="service" id="sylius.command_bus" />
+            <argument type="service" id="sylius.repository.order" />
+        </service>
     </services>
 </container>

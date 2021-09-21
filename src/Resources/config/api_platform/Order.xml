@@ -91,7 +91,7 @@
                 </attribute>
             </itemOperation>
 
-            <itemOperation name="shop_add_item">
+              <itemOperation name="shop_add_item">
                 <attribute name="method">PATCH</attribute>
                 <attribute name="path">/shop/orders/{tokenValue}/items</attribute>
                 <attribute name="messenger">input</attribute>
@@ -288,11 +288,12 @@
             </itemOperation>
 
             <itemOperation name="shop_remove_item">
-                <attribute name="method">DELETE</attribute>
-                <attribute name="path">/shop/orders/{tokenValue}/items/{itemId}</attribute>
-                <attribute name="messenger">input</attribute>
-                <attribute name="controller">Sylius\Bundle\ApiBundle\Controller\DeleteOrderItemAction</attribute>
-                <attribute name="write">false</attribute>
+                <attribute name="method">PATCH</attribute>
+                <attribute name="path">/shop/orders/{tokenValue}/removeitem/{itemId}</attribute>
+                <attribute name="controller">DavidRoberto\SyliusExtraApiPlugin\Controller\Api\DeleteOrderItemAction</attribute>
+                <attribute name="normalization_context">
+                    <attribute name="groups">shop:cart:read</attribute>
+                </attribute>
                 <attribute name="denormalization_context">
                     <attribute name="groups">shop:cart:remove_item</attribute>
                 </attribute>
@@ -316,6 +317,35 @@
                         </attribute>
                     </attribute>
                 </attribute>
+                
+                <attribute name="defaults">
+                    <attribute name="_api_receive">false</attribute>
+                </attribute>
+            </itemOperation>
+
+            <itemOperation name="shop_seal_box">
+                <attribute name="method">GET</attribute>
+                <attribute name="path">/shop/orders/{tokenValue}/sealbox</attribute>
+                <attribute name="controller">App\Controller\Action\SealBoxAction</attribute>
+                <attribute name="normalization_context">
+                    <attribute name="groups">shop:cart:read</attribute>
+                </attribute>
+                <attribute name="openapi_context">
+                    <attribute name="parameters">
+                        <attribute>
+                            <attribute name="name">tokenValue</attribute>
+                            <attribute name="in">path</attribute>
+                            <attribute name="required">true</attribute>
+                            <attribute name="schema">
+                                <attribute name="type">string</attribute>
+                            </attribute>
+                        </attribute>
+                    </attribute>
+                </attribute>
+                
+                <attribute name="defaults">
+                    <attribute name="_api_receive">false</attribute>
+                </attribute>
             </itemOperation>
 
             <itemOperation name="shop_change_quantity">
@@ -323,6 +353,9 @@
                 <attribute name="path">/shop/orders/{tokenValue}/items/{orderItemId}</attribute>
                 <attribute name="messenger">input</attribute>
                 <attribute name="input">Sylius\Bundle\ApiBundle\Command\Cart\ChangeItemQuantityInCart</attribute>
+                <attribute name="normalization_context">
+                    <attribute name="groups">shop:cart:read</attribute>
+                </attribute>
                 <attribute name="denormalization_context">
                     <attribute name="groups">shop:cart:change_quantity</attribute>
                 </attribute>
@@ -339,6 +372,40 @@
                         </attribute>
                         <attribute>
                             <attribute name="name">orderItemId</attribute>
+                            <attribute name="in">path</attribute>
+                            <attribute name="required">true</attribute>
+                            <attribute name="schema">
+                                <attribute name="type">string</attribute>
+                            </attribute>
+                        </attribute>
+                    </attribute>
+                </attribute>
+            </itemOperation>
+
+            <itemOperation name="shop_box_change_quantity">
+                <attribute name="method">PATCH</attribute>
+                <attribute name="path">/shop/orders/{tokenValue}/boxitems/{boxIndex}</attribute>
+                <attribute name="messenger">input</attribute>
+                <attribute name="input">App\Command\Cart\ChangeBoxItemsQuantityInCart</attribute>
+                <attribute name="normalization_context">
+                    <attribute name="groups">shop:cart:read</attribute>
+                </attribute>
+                <attribute name="denormalization_context">
+                    <attribute name="groups">shop:cart:change_quantity</attribute>
+                </attribute>
+                <attribute name="openapi_context">
+                    <attribute name="summary">Changes quantity of order item</attribute>
+                    <attribute name="parameters">
+                        <attribute>
+                            <attribute name="name">tokenValue</attribute>
+                            <attribute name="in">path</attribute>
+                            <attribute name="required">true</attribute>
+                            <attribute name="schema">
+                                <attribute name="type">string</attribute>
+                            </attribute>
+                        </attribute>
+                        <attribute>
+                            <attribute name="name">boxIndex</attribute>
                             <attribute name="in">path</attribute>
                             <attribute name="required">true</attribute>
                             <attribute name="schema">
