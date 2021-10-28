@@ -7,7 +7,7 @@ namespace DavidRoberto\SyliusExtraApiPlugin\Controller\Api;
 
 use Sylius\Bundle\ApiBundle\Controller;
 
-use Sylius\Bundle\ApiBundle\Command\Cart\RemoveItemFromCart;
+use App\Command\Cart\RemoveItemFromCart;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +31,8 @@ final class DeleteOrderItemAction
     {
         $command = new RemoveItemFromCart(
             $request->attributes->get('tokenValue'),
-            $request->attributes->get('itemId')
+            $request->attributes->get('itemId'),
+            $request->attributes->get('boxName'),
         );
         $this->commandBus->dispatch($command);
         return $this->orderRepository->findCartByTokenValue($request->attributes->get('tokenValue'));

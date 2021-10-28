@@ -80,11 +80,11 @@
                 </attribute>
             </itemOperation>
 
-              <itemOperation name="shop_add_item">
+            <itemOperation name="shop_add_item">
                 <attribute name="method">POST</attribute>
                 <attribute name="path">/shop/orders/{tokenValue}/items</attribute>
                 <attribute name="messenger">input</attribute>
-                <attribute name="input">Sylius\Bundle\ApiBundle\Command\Cart\AddItemToCart</attribute>
+                <attribute name="input">App\Command\Cart\AddItemToCart</attribute>
                 <attribute name="normalization_context">
                     <attribute name="groups">shop:cart:read</attribute>
                 </attribute>
@@ -95,7 +95,22 @@
                     <attribute name="summary">Adds Item to cart</attribute>
                 </attribute>
             </itemOperation>
-
+            
+            <itemOperation name="shop_add_box">
+                <attribute name="method">POST</attribute>
+                <attribute name="path">/shop/orders/{tokenValue}/add_box</attribute>
+                <attribute name="messenger">input</attribute>
+                <attribute name="input">App\Command\Cart\AddBox</attribute>
+                <attribute name="normalization_context">
+                    <attribute name="groups">shop:cart:read</attribute>
+                </attribute>
+                <attribute name="denormalization_context">
+                    <attribute name="groups">shop:cart:add_item</attribute>
+                </attribute>
+                <attribute name="openapi_context">
+                    <attribute name="summary">Adds Box to cart</attribute>
+                </attribute>
+            </itemOperation>
             <itemOperation name="shop_address">
                 <attribute name="method">PATCH</attribute>
                 <attribute name="path">/shop/orders/{tokenValue}/address</attribute>
@@ -278,7 +293,7 @@
 
             <itemOperation name="shop_remove_item">
                 <attribute name="method">PATCH</attribute>
-                <attribute name="path">/shop/orders/{tokenValue}/removeitem/{itemId}</attribute>
+                <attribute name="path">/shop/orders/{tokenValue}/removeitem/{itemId}/{boxName}</attribute>
                 <attribute name="controller">DavidRoberto\SyliusExtraApiPlugin\Controller\Api\DeleteOrderItemAction</attribute>
                 <attribute name="normalization_context">
                     <attribute name="groups">shop:cart:read</attribute>
@@ -341,7 +356,7 @@
                 <attribute name="method">PATCH</attribute>
                 <attribute name="path">/shop/orders/{tokenValue}/items/{orderItemId}</attribute>
                 <attribute name="messenger">input</attribute>
-                <attribute name="input">Sylius\Bundle\ApiBundle\Command\Cart\ChangeItemQuantityInCart</attribute>
+                <attribute name="input">App\Command\Cart\ChangeItemQuantityInCart</attribute>
                 <attribute name="normalization_context">
                     <attribute name="groups">shop:cart:read</attribute>
                 </attribute>
@@ -371,7 +386,7 @@
                 </attribute>
             </itemOperation>
 
-            <itemOperation name="shop_box_change_quantity">
+            <!-- <itemOperation name="shop_box_change_quantity">
                 <attribute name="method">PATCH</attribute>
                 <attribute name="path">/shop/orders/{tokenValue}/boxitems/{boxIndex}</attribute>
                 <attribute name="messenger">input</attribute>
@@ -403,7 +418,7 @@
                         </attribute>
                     </attribute>
                 </attribute>
-            </itemOperation>
+            </itemOperation> -->
 
             <itemOperation name="shop_apply_coupon">
                 <attribute name="method">PATCH</attribute>
