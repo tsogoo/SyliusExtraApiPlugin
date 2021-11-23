@@ -15,6 +15,7 @@ use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use \Stripe\Checkout\Session;
 use \Stripe\Stripe;
+use \Stripe\PaymentIntent;
 
 class StripeCheckoutController
 {
@@ -51,32 +52,20 @@ class StripeCheckoutController
         $request = $this->requestStack->getCurrentRequest();
         $orderToken = $request->get('tokenValue');
 
-        Stripe::setApiKey($this->params->get('stripe_secret_key'));
+        Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
 
         header('Content-Type: application/json');
 
         /** @var OrderInterface $order */
         $order = $this->orderRepository->findOneByTokenValue($orderToken);
-
-        $this->completeOrder($order);
-
-//        $items = $this->getOrderItems($order);
-
-        $items = $this->createStripeItems($order);
-
-        $checkoutSession = Session::create([
-            'payment_method_types' => ['card'],
-            'line_items' => $items,
-            'mode' => 'payment',
-            'success_url' => $this->params->get('client_url_payment_success'),
-            'cancel_url' => $this->params->get('client_url_payment_failed'),
+        
+        $intent = PaymentIntent::create([
+        'amount' => $order->getTotal(),
+        'currency' => 'usd',
+        'setup_future_usage' => 'off_session',
         ]);
-
-
-        $this->persistPaymentIntentId($order, $checkoutSession);
-
-
-        return ['id' => $checkoutSession->id];
+        //$this->persistPaymentIntentId($order, $intent['client_secret']);
+        return ['id' => $intent['id'], 'client_secret'=>$intent['client_secret'], 'status'=>$intent['status']];
     }
 
     public function createStripeItems(OrderInterface $order): array

@@ -16,6 +16,7 @@
             <group>shop:product:read</group>
             <group>shop:cart:read</group>
             <group>shop:cms:read</group>
+            <group>shop:wishlist:read</group>
         </attribute>
         <attribute name="product">
             <group>shop:cart:read</group>
@@ -25,6 +26,7 @@
             <group>shop:order:account:read</group>
             <group>shop:product_variant:read</group>
             <group>shop:cart:read</group>
+            <group>shop:wishlist:read</group>
             <group>shop:product:read</group>
         </attribute>
         <attribute name="enabled">

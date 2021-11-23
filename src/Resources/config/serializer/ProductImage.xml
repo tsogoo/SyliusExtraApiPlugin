@@ -18,12 +18,14 @@
             <group>shop:product:read</group>
             <group>shop:cart:read</group>
             <group>shop:cms:read</group>
+            <group>shop:wishlist:read</group>
         </attribute>
         <attribute name="type">
             <group>admin:product_image:read</group>
             <group>shop:product_image:read</group>
             <group>admin:product:read</group>
             <group>shop:product:read</group>
+            <group>shop:wishlist:read</group>
         </attribute>
     </class>
 </serializer>

@@ -15,6 +15,7 @@
             <group>admin:product:update</group>
             <group>shop:product:read</group>
             <group>shop:cms:read</group>
+            <group>shop:wishlist:read</group>
         </attribute>
         <attribute name="locale">
             <group>admin:product:create</group>
@@ -26,6 +27,7 @@
             <group>shop:product:read</group>
             <group>shop:cart:read</group>
             <group>shop:cms:read</group>
+            <group>shop:wishlist:read</group>
         </attribute>
         <attribute name="description">
             <group>shop:product:read</group>

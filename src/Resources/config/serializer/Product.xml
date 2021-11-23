@@ -24,6 +24,10 @@
             <group>admin:product:create</group>
             <group>admin:product:read</group>
             <group>shop:product:read</group>
+            <group>shop:wishlist:read</group>
+        </attribute>
+        <attribute name="box_type">
+            <group>shop:product:read</group>
         </attribute>
         <attribute name="createdAt">
             <group>admin:product:read</group>
@@ -38,6 +42,7 @@
             <group>admin:product:read</group>
             <group>admin:product:update</group>
             <group>shop:product:read</group>
+            <group>shop:wishlist:read</group>
             <group>shop:cart:read</group>
             <group>shop:cms:read</group>
         </attribute>
@@ -69,12 +74,14 @@
             <group>admin:product:create</group>
             <group>admin:product:update</group>
             <group>shop:product:read</group>
+            <group>shop:wishlist:read</group>
             <group>shop:cart:read</group>
             <group>shop:cms:read</group>
         </attribute>
         <attribute name="variants">
             <group>admin:product:read</group>
             <group>shop:product:read</group>
+            <group>shop:wishlist:read</group>
             <group>shop:cms:read</group>
         </attribute>
         <attribute name="enabled">

@@ -4,75 +4,57 @@
 namespace DavidRoberto\SyliusExtraApiPlugin\Controller\Api;
 
 
+use DavidRoberto\SyliusExtraApiPlugin\Entity\Order\Order;
 use Doctrine\ORM\EntityManagerInterface;
-use Psr\Log\LoggerInterface;
-use SM\Factory\FactoryInterface;
-use Stripe\Event;
-use Sylius\Bundle\CoreBundle\Mailer\Emails;
+use Sylius\Component\Channel\Context\ChannelContextInterface;
 use Sylius\Component\Core\Model\PaymentInterface;
-use Sylius\Component\Core\OrderPaymentTransitions;
-use Sylius\Component\Core\Repository\PaymentRepositoryInterface;
-use Sylius\Component\Mailer\Sender\SenderInterface;
-use Sylius\Component\Payment\PaymentTransitions;
+use Sylius\Component\Core\OrderCheckoutStates;
+use Sylius\Component\Order\Model\OrderInterface;
+use Sylius\Component\Order\Repository\OrderRepositoryInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Sylius\Component\Core\OrderPaymentTransitions;
+use Sylius\Component\Payment\PaymentTransitions;
 use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\HttpFoundation\Response;
-use \Stripe\Webhook;
+use SM\Factory\FactoryInterface;
+use \Stripe\Checkout\Session;
 use \Stripe\Stripe;
+use \Stripe\PaymentIntent;
+use Symfony\Component\HttpFoundation\Response;
 
-class StripeNotifySuccessController
+class StripeCheckoutCheckController
 {
-
     /**
      * @var RequestStack
      */
     private $requestStack;
-
+    /**
+     * @var OrderRepositoryInterface
+     */
+    private $orderRepository;
     /**
      * @var ParameterBagInterface
      */
     private $params;
     /**
-     * @var LoggerInterface
-     */
-    private $logger;
-    /**
-     * @var PaymentRepositoryInterface
-     */
-    private $paymentRepository;
-    /**
-     * @var FactoryInterface
-     */
-    private $stateMachineFactory;
-    /**
      * @var EntityManagerInterface
      */
     private $entityManager;
-    /**
-     * @var SenderInterface
-     */
-    private $emailSender;
 
     public function __construct(
         RequestStack $requestStack,
+        OrderRepositoryInterface $orderRepository,
         ParameterBagInterface $params,
-        LoggerInterface $logger,
-        PaymentRepositoryInterface $paymentRepository,
         FactoryInterface $stateMachineFactory,
-        EntityManagerInterface $entityManager,
-        SenderInterface $emailSender
+        EntityManagerInterface $entityManager
     ) {
         $this->requestStack = $requestStack;
+        $this->orderRepository = $orderRepository;
         $this->params = $params;
-        $this->logger = $logger;
-        $this->paymentRepository = $paymentRepository;
         $this->stateMachineFactory = $stateMachineFactory;
         $this->entityManager = $entityManager;
-        $this->emailSender = $emailSender;
     }
 
-    public function __invoke()
-    {
+    public function __invoke() {
         $request = $this->requestStack->getCurrentRequest();
         $orderToken = $request->get('tokenValue');
         $order = $this->orderRepository->findOneByTokenValue($orderToken);
@@ -81,12 +63,13 @@ class StripeNotifySuccessController
         $payment = $order->getLastPayment();
         
         Stripe::setApiKey($_ENV['STRIPE_SECRET_KEY']);
-        $response = PaymentIntent::confirm(
-            $payment->getDetails()['id'],
-            ['payment_method' => 'card']
-        );
-        if($response->status == 'succeeded'){
-            $this->handlePaymentSuccess($payment, $response);
+        // $response = PaymentIntent::confirm(
+        //     $payment->getDetails()['id'],
+        //     ['payment_method' => 'card']
+        // );
+        //if($response->status == 'succeeded'){
+        if('succeeded'){
+            $this->handlePaymentSuccess($order, $payment, null);
             return new Response(Response::HTTP_OK);
         }
         else{
@@ -94,10 +77,6 @@ class StripeNotifySuccessController
         }
     }
 
-    /**
-     * @param Event $event
-     * @throws \SM\SMException
-     */
     private function handlePaymentSuccess($order, $payment, $payment_response): void
     {
         $this->completePayment($order, $payment, $payment_response);
@@ -126,5 +105,4 @@ class StripeNotifySuccessController
 //        );
         $this->entityManager->flush();
     }
-
 }

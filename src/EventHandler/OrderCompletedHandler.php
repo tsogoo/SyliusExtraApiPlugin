@@ -19,8 +19,7 @@ final class OrderCompletedHandler
 
     public function __invoke(OrderCompleted $orderCompleted): void
     {
-        // prevent sending mail before payment success
-        // $this->commandBus->dispatch(new SendOrderConfirmation($orderCompleted->orderToken()));
+        $this->commandBus->dispatch(new SendOrderConfirmation($orderCompleted->orderToken()));
     }
 }
 

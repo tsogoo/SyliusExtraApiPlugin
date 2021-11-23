@@ -47,6 +47,8 @@
                     <attribute>sylius.api.translation_order_name_and_locale_filter</attribute>
                     <attribute>sylius.api.product_enabled_filter</attribute>
                     <attribute>sylius.api.product_variant_stock_filter</attribute>
+                    <attribute>sylius.api.product_variant_option_filter</attribute>
+                    <attribute>sylius.api.product_variant_price_filter</attribute>
                 </attribute>
                 <attribute name="normalization_context">
                     <attribute name="groups">shop:product:read</attribute>

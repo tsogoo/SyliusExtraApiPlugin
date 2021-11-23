@@ -17,6 +17,20 @@
             <tag name="api_platform.filter"/>
         </service>
 
+        <service id="sylius.api.product_variant_option_filter" parent="api_platform.doctrine.orm.search_filter" public="true">
+            <argument type="collection">
+                <argument key="variants.optionValues.code">exact</argument>
+            </argument>
+            <tag name="api_platform.filter"/>
+        </service>
+
+        <service id="sylius.api.product_variant_price_filter" parent="api_platform.doctrine.orm.range_filter" public="true">
+            <argument type="collection">
+                <argument key="variants.channelPricings.price">~</argument>
+            </argument>
+            <tag name="api_platform.filter"/>
+        </service>
+
         <service id="david_roberto.event.jwt_created_listener" class="DavidRoberto\SyliusExtraApiPlugin\EventListener\JWTCreatedListener">
             <argument type="service" id="request_stack" />
             <tag name="kernel.event_listener" event="lexik_jwt_authentication.on_jwt_created" method="onJWTCreated"/>
@@ -25,12 +39,12 @@
 
         <service id="Sylius\Component\User\Security\Generator\GeneratorInterface" alias="sylius.shop_user.token_generator.password_reset" />
 
-        <service id="Sylius\Bundle\ApiBundle\EventHandler\OrderCompletedHandler" class="DavidRoberto\SyliusExtraApiPlugin\EventHandler\OrderCompletedHandler">
+        <!-- <service id="Sylius\Bundle\ApiBundle\EventHandler\OrderCompletedHandler" class="DavidRoberto\SyliusExtraApiPlugin\EventHandler\OrderCompletedHandler">
             <argument type="service" id="messenger.default_bus" />
             <argument type="service" id="sylius.repository.order" />
             <argument type="service" id="sylius.calculator.product_variant_price" />
             <tag name="messenger.message_handler" bus="sylius_event.bus"/>
-        </service>
+        </service> -->
 
         <service id="DavidRoberto\SyliusExtraApiPlugin\Controller\Api\GetProductBySlugController" public="true" autowire="true"/>
         <service id="DavidRoberto\SyliusExtraApiPlugin\Controller\Api\GetCustomerUserByEmailController" public="true" autowire="true"/>
@@ -38,6 +52,7 @@
         <service id="DavidRoberto\SyliusExtraApiPlugin\Controller\Api\ReinitPasswordRequestController" public="true" autowire="true"/>
         <service id="DavidRoberto\SyliusExtraApiPlugin\Controller\Api\SearchProductsController" public="true" autowire="true"/>
         <service id="DavidRoberto\SyliusExtraApiPlugin\Controller\Api\StripeCheckoutController" public="true" autowire="true"/>
+        <service id="DavidRoberto\SyliusExtraApiPlugin\Controller\Api\StripeCheckoutCheckController" public="true" autowire="true"/>
         <service id="DavidRoberto\SyliusExtraApiPlugin\Controller\Api\StripeNotifySuccessController" public="true" autowire="true"/>
         <service id="DavidRoberto\SyliusExtraApiPlugin\Controller\Api\DeleteOrderItemAction" public="true">
             <argument type="service" id="sylius.command_bus" />

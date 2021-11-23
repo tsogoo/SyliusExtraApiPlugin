@@ -291,6 +291,18 @@
                 </attribute>
             </itemOperation>
 
+            <itemOperation name="shop_stripe_checkout_check">
+                <attribute name="method">POST</attribute>
+                <attribute name="path">/shop/orders/{tokenValue}/stripe/complete</attribute>
+                <attribute name="controller">DavidRoberto\SyliusExtraApiPlugin\Controller\Api\StripeCheckoutCheckController</attribute>
+                <attribute name="openapi_context">
+                    <attribute name="summary">Create Stripe checkout session</attribute>
+                </attribute>
+                <attribute name="defaults">
+                    <attribute name="_api_receive">false</attribute>
+                </attribute>
+            </itemOperation>
+
             <itemOperation name="shop_remove_item">
                 <attribute name="method">PATCH</attribute>
                 <attribute name="path">/shop/orders/{tokenValue}/removeitem/{itemId}/{boxName}</attribute>
