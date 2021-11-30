@@ -53,6 +53,7 @@
         <service id="DavidRoberto\SyliusExtraApiPlugin\Controller\Api\SearchProductsController" public="true" autowire="true"/>
         <service id="DavidRoberto\SyliusExtraApiPlugin\Controller\Api\StripeCheckoutController" public="true" autowire="true"/>
         <service id="DavidRoberto\SyliusExtraApiPlugin\Controller\Api\StripeCheckoutCheckController" public="true" autowire="true"/>
+        <service id="DavidRoberto\SyliusExtraApiPlugin\Controller\Api\StripeCheckoutSuccessHookController" public="true" autowire="true"/>
         <service id="DavidRoberto\SyliusExtraApiPlugin\Controller\Api\StripeNotifySuccessController" public="true" autowire="true"/>
         <service id="DavidRoberto\SyliusExtraApiPlugin\Controller\Api\DeleteOrderItemAction" public="true">
             <argument type="service" id="sylius.command_bus" />

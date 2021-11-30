@@ -60,6 +60,7 @@ class StripeCheckoutController
         $order = $this->orderRepository->findOneByTokenValue($orderToken);
         
         $intent = PaymentIntent::create([
+        'metadata' => ['orderToken'=>$orderToken],
         'amount' => $order->getTotal(),
         'currency' => 'usd',
         'setup_future_usage' => 'off_session',
