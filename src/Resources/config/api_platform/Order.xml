@@ -13,6 +13,9 @@
 
         <attribute name="validation_groups">sylius</attribute>
 
+        <attribute name="order">
+            <attribute name="createdAt">DESC</attribute>
+        </attribute>
         <collectionOperations>
             <collectionOperation name="admin_get">
                 <attribute name="method">GET</attribute>
