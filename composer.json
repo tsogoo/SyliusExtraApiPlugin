@@ -9,7 +9,7 @@
   "license": "MIT",
   "require": {
     "php": "^7.3 || ^8.0",
-    "sylius/sylius": "~1.8.0 || ~1.9.0 || ~1.10.0 || ~1.11.0",
+    "sylius/sylius": "~1.8.0 || ~1.9.0 || ~1.10.0 || ~1.11.0 || dev-master#a063ecb",
     "nelmio/cors-bundle": "^2.1"
   },
   "require-dev": {
