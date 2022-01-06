@@ -8,9 +8,14 @@ class JWTCreatedListener
 {
     public function onJWTCreated(JWTCreatedEvent $event)
     {
+        
         $payload = $event->getData();
-        $payload['id'] = $event->getUser()->getCustomer()->getId();
-
+        if ($event->getUser() instanceof ShopUserInterface) {
+            $payload['id'] = $event->getUser()->getCustomer()->getId();
+        }
+        else{
+            return;
+        }
         $event->setData($payload);
     }
 
