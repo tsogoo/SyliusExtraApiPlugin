@@ -3,6 +3,7 @@
 namespace DavidRoberto\SyliusExtraApiPlugin\EventListener;
 
 use Lexik\Bundle\JWTAuthenticationBundle\Event\JWTCreatedEvent;
+use Sylius\Component\Core\Model\ShopUserInterface;
 
 class JWTCreatedListener
 {
