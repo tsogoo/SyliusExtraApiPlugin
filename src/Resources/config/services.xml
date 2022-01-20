@@ -32,10 +32,9 @@
         </service>
 
         <service id="david_roberto.event.jwt_created_listener" class="DavidRoberto\SyliusExtraApiPlugin\EventListener\JWTCreatedListener">
-            <argument type="service" id="request_stack" />
+            <argument type="service" id="sylius.repository.customer" />
             <tag name="kernel.event_listener" event="lexik_jwt_authentication.on_jwt_created" method="onJWTCreated"/>
         </service>
-
 
         <service id="Sylius\Component\User\Security\Generator\GeneratorInterface" alias="sylius.shop_user.token_generator.password_reset" />
 
