@@ -62,16 +62,6 @@ class StripeCheckoutSuccessHookController
         
         $payload = @file_get_contents('php://input');
         $event = null;
-        try {
-            $event = \Stripe\Event::constructFrom(
-              json_decode($payload, true)
-            );
-          } catch(\UnexpectedValueException $e) {
-            // Invalid payload
-            echo '⚠️  Webhook error while parsing basic request.';
-            http_response_code(400);
-            exit();
-        }
         if ($endpoint_secret) {
             // Only verify the event if there is an endpoint secret defined
             // Otherwise use the basic decoded event
