@@ -79,7 +79,13 @@ class StripeCheckoutSuccessHookController
         }
         switch ($event->type) {
             case 'payment_intent.succeeded':
-                $this->completePayment($event->data->object);
+                $this->setPaymentState($event->data->object, 'succeeded');
+            break;
+            case 'payment_intent.processing':
+                $this->setPaymentState($event->data->object, 'processing');
+            break;
+            case 'payment_intent.payment_failed':
+                $this->setPaymentState($event->data->object, 'payment_failed');
             break;
 
             default:
@@ -87,7 +93,7 @@ class StripeCheckoutSuccessHookController
         error_log('Received unknown event type');
         return http_response_code(400);
     }
-    private function completePayment($hook_request): void
+    private function completePayment($hook_request, $payment_intent_state): void
     {
         if($hook_request->metadata->orderToken)
         {
@@ -96,9 +102,27 @@ class StripeCheckoutSuccessHookController
             if($order){
                 $payment = $order->getLastPayment();
                 $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-                $stateMachine->apply(OrderPaymentTransitions::TRANSITION_PAY);
-                $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
-                $stateMachine->apply(PaymentTransitions::TRANSITION_COMPLETE);
+                if ($stateMachine->can(OrderPaymentTransitions::TRANSITION_PAY)) {
+                    $stateMachine->apply(OrderPaymentTransitions::TRANSITION_PAY);
+                }
+                if($payment_intent_state=='succeeded'){
+                    $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
+                    if ($stateMachine->can(PaymentTransitions::TRANSITION_COMPLETE)) {
+                        $stateMachine->apply(PaymentTransitions::TRANSITION_COMPLETE);
+                    }
+                }
+                else if($payment_intent_state=='processing'){
+                    $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
+                    if ($stateMachine->can(PaymentTransitions::TRANSITION_PROCESS)) {
+                        $stateMachine->apply(PaymentTransitions::TRANSITION_PROCESS);
+                    }
+                }
+                else if($payment_intent_state=='payment_failed'){
+                    $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
+                    if ($stateMachine->can(PaymentTransitions::TRANSITION_FAIL)) {
+                        $stateMachine->apply(PaymentTransitions::TRANSITION_FAIL);
+                    }
+                }
     //        $this->emailSender->send(
     //            Emails::ORDER_CONFIRMATION_RESENT,
     //            [$order->getCustomer()->getEmail()],
