@@ -93,7 +93,7 @@ class StripeCheckoutSuccessHookController
         error_log('Received unknown event type');
         return http_response_code(400);
     }
-    private function completePayment($hook_request, $payment_intent_state): void
+    private function setPaymentState($hook_request, $payment_intent_state): void
     {
         if($hook_request->metadata->orderToken)
         {
