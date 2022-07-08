@@ -101,14 +101,14 @@ class StripeCheckoutSuccessHookController
             $order = $this->orderRepository->findOneByTokenValue($orderToken);
             if($order){
                 $payment = $order->getLastPayment();
-                $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
-                if ($stateMachine->can(OrderPaymentTransitions::TRANSITION_PAY)) {
-                    $stateMachine->apply(OrderPaymentTransitions::TRANSITION_PAY);
-                }
                 if($payment_intent_state=='succeeded'){
                     $stateMachine = $this->stateMachineFactory->get($payment, PaymentTransitions::GRAPH);
                     if ($stateMachine->can(PaymentTransitions::TRANSITION_COMPLETE)) {
                         $stateMachine->apply(PaymentTransitions::TRANSITION_COMPLETE);
+                        $stateMachine = $this->stateMachineFactory->get($order, OrderPaymentTransitions::GRAPH);
+                        if ($stateMachine->can(OrderPaymentTransitions::TRANSITION_PAY)) {
+                            $stateMachine->apply(OrderPaymentTransitions::TRANSITION_PAY);
+                        }
                     }
                 }
                 else if($payment_intent_state=='processing'){
@@ -123,15 +123,6 @@ class StripeCheckoutSuccessHookController
                         $stateMachine->apply(PaymentTransitions::TRANSITION_FAIL);
                     }
                 }
-    //        $this->emailSender->send(
-    //            Emails::ORDER_CONFIRMATION_RESENT,
-    //            [$order->getCustomer()->getEmail()],
-    //            [
-    //                'order' => $order,
-    //                'channel' => $order->getChannel(),
-    //                'localeCode' => $order->getLocaleCode(),
-    //            ]
-    //        );
                 $this->entityManager->flush();
                 http_response_code(200);
                 exit();
